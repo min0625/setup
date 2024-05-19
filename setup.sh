@@ -84,7 +84,8 @@ setup_zsh() {
     local home_zshrc_path="${HOME}/.zshrc"
 
     if [[ ! -d "${local_path}" ]]; then
-        git clone "https://${remote_path}.git" "${local_path}"
+        GIT_CONFIG_GLOBAL=/dev/null \
+            git clone "https://${remote_path}.git" "${local_path}"
     fi
 
     if ! grep -q "^${zshrc_cfg}$" "${home_zshrc_path}"; then
@@ -99,7 +100,8 @@ install_asdf() {
     local local_path="${HOME}/.asdf"
 
     if [[ ! -d "${local_path}" ]]; then
-        git clone "https://github.com/asdf-vm/asdf.git" "${local_path}" --branch v0.14.0
+        GIT_CONFIG_GLOBAL=/dev/null \
+            git clone "https://github.com/asdf-vm/asdf.git" "${local_path}" --branch v0.14.0
     fi
 
     asdf update

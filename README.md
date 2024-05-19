@@ -30,7 +30,7 @@ colima stop
 ### SSH Key
 ```sh
 ssh-keygen -t ed25519 -b 4096
-echo ~/.ssh/id_ed25519.pub | pbcopy
+cat ~/.ssh/id_ed25519.pub | pbcopy
 ```
 
 ### AWS Cli V2
