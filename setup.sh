@@ -134,4 +134,4 @@ main() {
     echo "Setup completed!!!"
 }
 
-[[ "${0}" == "${BASH_SOURCE}" ]] && main "$@"
+main "$@"
