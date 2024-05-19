@@ -1,0 +1,13 @@
+[user]
+	name = Min
+
+[core]
+	excludesfile = "~/src/github.com/min0625/setup/.gitignore.global"
+	hooksPath = no-hooks
+	# hooksPath = .git/hooks
+
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
+
+[commit]
+	# gpgsign = true
