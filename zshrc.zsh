@@ -1,33 +1,36 @@
-if [[ "${0}" == "${BASH_SOURCE}" ]]; then
-    echo "This script should be sourced, not executed."
-    exit 1
-fi
-
 ## Homebrew M1
-PATH="/opt/homebrew/bin:$PATH"
+PATH="/opt/homebrew/bin:${PATH}"
 
 # GNU Bin Utils
 # Install: brew install coreutils
-PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
 
 # Alias
+alias -- -='cd -'
 alias ls='ls -F --color=auto'
 alias ll='ls -l'
 alias grep='grep --color'
+alias mkdir='mkdir -p'
+alias cp='cp -i -r'
+alias mv='mv -i'
+# alias rm='rm -i'
+alias rm='trash' # brew install trash
 alias python='python3'
 alias pip='pip3'
 alias py='python'
 
 ## myself ENV
-if [[ -f "$HOME/.myself.env" ]]; then
-    . $HOME/.myself.env
+if [[ -f "${HOME}/.myself.env" ]]; then
+    . "${HOME}/.myself.env"
 else
-    touch $HOME/.myself.env
+    touch "${HOME}/.myself.env"
 fi
 
 # Auto Complete
 autoload -Uz compinit && compinit -i
-zstyle ':completion:*' menu yes select
+# zstyle ':completion:*' menu select
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' list-colors ''
 
 # Show some info on terminal
 PROMPT='%F{184}%n%f@%F{2}%m%f %F{30}%~%f
@@ -40,8 +43,6 @@ RPROMPT='${vcs_info_msg_0_}'
 autoload -Uz vcs_info
 
 precmd() {
-    # echo "Current time: $(date)"
-
     # Show Git info on terminal
     vcs_info
 }
@@ -50,23 +51,26 @@ precmd() {
 # Format the vcs_info_msg_0_ variable
 zstyle ':vcs_info:git:*' formats '%F{1}(%b)%f'
 
-# Show Git info on terminal.
-# Set up the prompt (with git branch name)
-setopt PROMPT_SUBST
+unsetopt menu_complete # do not autoselect the first completion entry
+setopt prompt_subst
+setopt auto_cd
+setopt auto_menu # show completion menu on successive tab press
+setopt complete_in_word
+setopt always_to_end
 
 # ASDF
 # Ref: https://asdf-vm.com/guide/getting-started.html
-. "$HOME/.asdf/asdf.sh"
+. "${HOME}/.asdf/asdf.sh"
 
 # Golang with ASDF
 #
 # Ref: https://github.com/asdf-community/asdf-golang
 #
 # setup ${GOROOT}
-. "$HOME/.asdf/plugins/golang/set-env.zsh"
+. "${HOME}/.asdf/plugins/golang/set-env.zsh"
 #
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"
+export GOPATH="${HOME}/go"
+export PATH="${PATH}:${GOPATH}/bin"
 export GOPRIVATE="github.com/min0625,gitlab.kkinternal.com"
 
 # AWS

@@ -59,6 +59,7 @@ install_brew_pkgs() {
         "docker-compose"
         "colima"
         "gnupg"
+        "trash"
     )
 
     for brew_pkg in "${brew_pkgs[@]}"; do
@@ -80,7 +81,7 @@ setup_brew() {
 setup_zsh() {
     local remote_path="github.com/min0625/setup"
     local local_path="${HOME}/src/${remote_path}"
-    local zshrc_cfg=". ${local_path}/zshrc.sh"
+    local zshrc_cfg=". ${local_path}/zshrc.zsh"
     local home_zshrc_path="${HOME}/.zshrc"
 
     if [[ ! -d "${local_path}" ]]; then
