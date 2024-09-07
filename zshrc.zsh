@@ -1,9 +1,9 @@
 ## Homebrew M1
-PATH="/opt/homebrew/bin:${PATH}"
+export PATH="/opt/homebrew/bin:${PATH}"
 
 # GNU Bin Utils
 # Install: brew install coreutils
-PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
 
 # Alias
 alias -- -='cd -'
@@ -33,11 +33,11 @@ zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' list-colors ''
 
 # Show some info on terminal
-PROMPT='%F{184}%n%f@%F{2}%m%f %F{30}%~%f
+export PROMPT='%F{184}%n%f@%F{2}%m%f %F{30}%~%f
 %# '
 
 # Show Git info on terminal
-RPROMPT='${vcs_info_msg_0_}'
+export RPROMPT='${vcs_info_msg_0_}'
 
 # Show Git info on terminal
 autoload -Uz vcs_info
@@ -72,6 +72,11 @@ setopt always_to_end
 export GOPATH="${HOME}/go"
 export PATH="${PATH}:${GOPATH}/bin"
 export GOPRIVATE="github.com/min0625,gitlab.kkinternal.com"
+
+# MySQL Client
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/mysql-client/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/mysql-client/include"
 
 # AWS
 # AWS_PROFILE="pgc-core-dev"
