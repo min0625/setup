@@ -1,3 +1,6 @@
+export LANG="zh_TW.UTF-8"
+export LC_ALL="zh_TW.UTF-8"
+
 ## Homebrew M1
 export PATH="/opt/homebrew/bin:${PATH}"
 
@@ -81,3 +84,5 @@ export CPPFLAGS="-I/opt/homebrew/opt/mysql-client/include"
 # AWS
 # AWS_PROFILE="pgc-core-dev"
 alias aws.pgc_core_dev='AWS_PROFILE="pgc-core-dev" aws'
+
+alias k9s='LANG="en_US.UTF-8" LC_ALL="en_US.UTF-8" k9s'
