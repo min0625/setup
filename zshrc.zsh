@@ -1,6 +1,8 @@
 export LANG="zh_TW.UTF-8"
 export LC_ALL="zh_TW.UTF-8"
 
+export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
+
 ## Homebrew M1
 export PATH="/opt/homebrew/bin:${PATH}"
 
