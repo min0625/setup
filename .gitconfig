@@ -1,5 +1,7 @@
 [user]
-	name = Min
+	name = min0625
+    email = 70873102+min0625@users.noreply.github.com
+    # signingkey = 3AA5C34371567BD2
 
 [core]
 	excludesfile = "~/src/github.com/min0625/setup/.gitignore.global"

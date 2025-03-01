@@ -33,6 +33,9 @@ ssh-keygen -t ed25519 -b 4096
 cat ~/.ssh/id_ed25519.pub | pbcopy
 ```
 
+### GPG Key
+- See: https://docs.github.com/zh/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
+
 ### AWS Cli V2
 - Install: https://docs.aws.amazon.com/zh_tw/cli/latest/userguide/getting-started-install.html
 
