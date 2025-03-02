@@ -94,6 +94,7 @@ setup_zsh() {
     fi
 
     git config --global include.path "~/src/${remote_path}/.gitconfig"
+    git config --global 'includeIf.gitdir/i:~/src/github.com/.path' "~/src/${remote_path}/.gitconfig"
 }
 
 # Ref: https://asdf-vm.com/guide/getting-started.html
@@ -105,15 +106,15 @@ install_asdf() {
             git clone "https://github.com/asdf-vm/asdf.git" "${local_path}" --branch v0.14.0
     fi
 
-    asdf update
+    # asdf update
 }
 
 install_asdf_pkgs() {
     local asdf_pkgs=(
         "golang"
-        # "terraform"
-        # "kubectl"
-        # "k9s"
+        "terraform"
+        "kubectl"
+        "k9s"
     )
 
     for asdf_pkg in "${asdf_pkgs[@]}"; do
