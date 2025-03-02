@@ -8,11 +8,13 @@ export PATH="/opt/homebrew/bin:${PATH}"
 
 # GNU Bin Utils
 # Install: brew install coreutils
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+# export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+# alias ls='gls'
 
 # Alias
 alias -- -='cd -'
-alias ls='ls -F --color=auto'
+# alias ls='ls -F --color=auto'
+alias ls='gls -NF --color=auto --group-directories-first'
 alias ll='ls -l'
 alias grep='grep --color'
 alias mkdir='mkdir -p'
@@ -38,11 +40,16 @@ zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' list-colors ''
 
 # Show some info on terminal
-export PROMPT='%F{184}%n%f@%F{2}%m%f %F{30}%~%f
-%# '
+# export PROMPT='%F{184}%n%f@%F{2}%m%f %F{30}%~%f
+# %# '
+
+# export PROMPT='%F{184}%n%f %F{30}%~%f${vcs_info_msg_0_}
+# %# '
+
+export PROMPT='%F{184}%n%f %F{30}%~%f${vcs_info_msg_0_} %# '
 
 # Show Git info on terminal
-export RPROMPT='${vcs_info_msg_0_}'
+# export RPROMPT='${vcs_info_msg_0_}'
 
 # Show Git info on terminal
 autoload -Uz vcs_info
@@ -71,12 +78,14 @@ setopt always_to_end
 #
 # Ref: https://github.com/asdf-community/asdf-golang
 #
-# setup ${GOROOT}
-. "${HOME}/.asdf/plugins/golang/set-env.zsh"
+# setup go env
+# . "${HOME}/.asdf/plugins/golang/set-env.zsh"
 #
 export GOPATH="${HOME}/go"
-export PATH="${PATH}:${GOPATH}/bin"
+export GOBIN="${GOPATH}/bin"
+export GOMODCACHE="${GOPATH}/pkg/mod"
 export GOPRIVATE="github.com/min0625,gitlab.kkinternal.com"
+export PATH="${PATH}:${GOBIN}"
 
 # MySQL Client
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"

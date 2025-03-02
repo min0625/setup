@@ -2,11 +2,5 @@
 .vscode
 .DS_Store
 
-.myself/*
-.myself-*
-.myself_*
-.myself.*
-myself/*
-myself-*
-myself_*
-myself.*
+.local/
+*.local.*
