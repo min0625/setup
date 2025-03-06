@@ -5,11 +5,15 @@
 
 [core]
 	excludesfile = "~/src/github.com/min0625/setup/.gitignore.global"
+    autocrlf = input
 	hooksPath = no-hooks
 	# hooksPath = .git/hooks
 
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
+
+[pull]
+	rebase = true
 
 [commit]
 	# gpgsign = true
