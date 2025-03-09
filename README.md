@@ -34,6 +34,12 @@ cat ~/.ssh/id_ed25519.pub | pbcopy
 ```
 
 ### GPG Key
+```sh
+brew install gnupg
+gpg --full-generate-key
+gpg --list-keys
+gpg --armor --export $KEY_ID | pbcopy
+```
 - See: https://docs.github.com/zh/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
 
 ### AWS Cli V2
