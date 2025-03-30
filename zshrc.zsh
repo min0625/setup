@@ -1,55 +1,42 @@
+# export LANG="en_US.UTF-8"
 export LANG="zh_TW.UTF-8"
-export LC_ALL="zh_TW.UTF-8"
+# export LC_ALL="en_US.UTF-8"
+# export LC_ALL="zh_TW.UTF-8"
 
-export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
-
-## Homebrew M1
-export PATH="/opt/homebrew/bin:${PATH}"
-
-# GNU Bin Utils
-# Install: brew install coreutils
-# export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
-# alias ls='gls'
-
-# Alias
 alias -- -='cd -'
-# alias ls='ls -F --color=auto'
-alias ls='gls -NF --color=auto --group-directories-first'
+alias ls='ls -F --color=auto'
+alias ls='gls' # GNU ls
 alias ll='ls -l'
 alias grep='grep --color'
 alias mkdir='mkdir -p'
 alias cp='cp -i -r'
 alias mv='mv -i'
-# alias rm='rm -i'
+alias rm='rm -i'
 alias rm='trash' # brew install trash
 alias python='python3'
 alias pip='pip3'
 alias py='python'
+alias k9s='LANG="en_US.UTF-8" k9s'
+alias gls='gls -F --color=auto --group-directories-first'
 
-## myself ENV
-if [[ -f "${HOME}/.myself.env" ]]; then
-    . "${HOME}/.myself.env"
-else
-    touch "${HOME}/.myself.env"
-fi
+# The `time` command output format like `GNU time`
+export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
 
-# Auto Complete
+# Homebrew path for mac M1
+export PATH="/opt/homebrew/bin:${PATH}"
+
+# GNU Bin Utils
+# Install: brew install coreutils
+# Info: brew info coreutils
+# export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+
+# Auto completion
 autoload -Uz compinit && compinit -i
 # zstyle ':completion:*' menu select
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' list-colors ''
 
-# Show some info on terminal
-# export PROMPT='%F{184}%n%f@%F{2}%m%f %F{30}%~%f
-# %# '
-
-# export PROMPT='%F{184}%n%f %F{30}%~%f${vcs_info_msg_0_}
-# %# '
-
 export PROMPT='%F{184}%n%f %F{30}%~%f${vcs_info_msg_0_} %# '
-
-# Show Git info on terminal
-# export RPROMPT='${vcs_info_msg_0_}'
 
 # Show Git info on terminal
 autoload -Uz vcs_info
@@ -71,29 +58,14 @@ setopt complete_in_word
 setopt always_to_end
 
 # ASDF
-# Ref: https://asdf-vm.com/guide/getting-started.html
-. "${HOME}/.asdf/asdf.sh"
+export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
 
-# Golang with ASDF
-#
-# Ref: https://github.com/asdf-community/asdf-golang
-#
-# setup go env
-# . "${HOME}/.asdf/plugins/golang/set-env.zsh"
-#
+# ASDF DirEnv
+source "${XDG_CONFIG_HOME:-${HOME}/.config}/asdf-direnv/zshrc"
+
+# Golang
 export GOPATH="${HOME}/go"
-export GOBIN="${GOPATH}/bin"
 export GOMODCACHE="${GOPATH}/pkg/mod"
-export GOPRIVATE="github.com/min0625,gitlab.kkinternal.com"
+export GOBIN="${GOPATH}/bin"
 export PATH="${PATH}:${GOBIN}"
-
-# MySQL Client
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
-export LDFLAGS="-L/opt/homebrew/opt/mysql-client/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/mysql-client/include"
-
-# AWS
-# AWS_PROFILE="pgc-core-dev"
-alias aws.pgc_core_dev='AWS_PROFILE="pgc-core-dev" aws'
-
-alias k9s='LANG="en_US.UTF-8" LC_ALL="en_US.UTF-8" k9s'
+export GOPRIVATE="github.com/min0625,gitlab.com/min0625"

@@ -4,7 +4,7 @@
 	# signingkey = 3AA5C34371567BD2
 
 [core]
-	excludesfile = "~/src/github.com/min0625/setup/.gitignore.global"
+	excludesfile = "~/src/github.com/min0625/setup/.gitignore"
     autocrlf = input
 	hooksPath = no-hooks
 	# hooksPath = .git/hooks

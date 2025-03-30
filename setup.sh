@@ -1,66 +1,97 @@
 #!/bin/bash
 
-# Exit on any error.
+# Abort on any error.
 set -eo pipefail
 
-# Print commands if ${TRACE} is set.
-[[ "${TRACE}" ]] && set -x
-
-# Exit on unset variables.
+# Abort on undefined variable.
 set -u
+
+[[ -n "${TRACE:-}" ]] && set -x
 
 abort() {
     printf "%s\n" "$@" >&2
     exit 1
 }
 
-check_is_macos() {
-    local os_name="$(uname -s)"
-
-    if [[ "${os_name}" != "Darwin" ]]; then
-        abort "unexpected OS: ${os_name}"
-    fi
-}
-
-command_exist() {
+cmd_exist() {
     command -v "${1}" &>/dev/null
 }
 
-install_brew() {
-    if ! command_exist "brew"; then
-        echo "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
+abort_if_not_mac() {
+    [[ -n "${TEST_ON_LINUX:-}" ]] && return 0
 
-    brew update
+    local os_name="$(uname -s)"
+
+    if [[ "${os_name}" != 'Darwin' ]]; then
+        abort "Want 'Darwin'(macOS), but got: '${os_name}'"
+    fi
 }
 
 brew_cmd() {
-    local brew_paths=(
+    local cmd_paths=(
         "brew"
         "/opt/homebrew/bin/brew" # M1
     )
 
-    for brew_path in "${brew_paths[@]}"; do
-        if command_exist "${brew_path}"; then
-            "$brew_path" "$@"
-            return
+    local local_cmd_path=""
+    for cmd_path in "${cmd_paths[@]}"; do
+        if cmd_exist "${cmd_path}"; then
+            local_cmd_path="${cmd_path}"
+            break
         fi
     done
 
-    abort "brew command not found"
+    if [[ -z "${local_cmd_path}" ]]; then
+        abort "${FUNCNAME[0]} command not found"
+    fi
+
+    "${local_cmd_path}" "$@"
+}
+
+asdf_cmd() {
+    local cmd_paths=(
+        "asdf"
+        "/opt/homebrew/bin/asdf"
+    )
+
+    local local_cmd_path=""
+    for cmd_path in "${cmd_paths[@]}"; do
+        if cmd_exist "${cmd_path}"; then
+            local_cmd_path="${cmd_path}"
+            break
+        fi
+    done
+
+    if [[ -z "${local_cmd_path}" ]]; then
+        abort "${0} command not found"
+    fi
+
+    "${local_cmd_path}" "$@"
+}
+
+install_brew() {
+    if ! cmd_exist "brew"; then
+        echo "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    echo "Updating Homebrew..."
+    brew update
 }
 
 install_brew_pkgs() {
     local brew_pkgs=(
         "git"
         "coreutils"
+        "asdf"
         "docker"
         "docker-compose"
         "colima"
         "gnupg"
         "trash"
     )
+
+    echo "Installing Homebrew packages..."
 
     for brew_pkg in "${brew_pkgs[@]}"; do
         if brew_cmd list "${brew_pkg}" &>/dev/null; then
@@ -76,37 +107,25 @@ setup_brew() {
     install_brew_pkgs
 }
 
-# TODO: push config
-# TODO: pull config
 setup_zsh() {
-    local remote_path="github.com/min0625/setup"
-    local local_path="${HOME}/src/${remote_path}"
-    local zshrc_cfg=". ${local_path}/zshrc.zsh"
-    local home_zshrc_path="${HOME}/.zshrc"
+    local remote_git_path="github.com/min0625/setup"
+    local local_git_path="${HOME}/src/${remote_git_path}"
+    local zshrc_cfg="source ${local_git_path}/zshrc.zsh"
+    local local_zshrc_path="${HOME}/.zshrc"
 
-    if [[ ! -d "${local_path}" ]]; then
+    echo "Setting up zsh..."
+
+    if [[ ! -d "${local_git_path}" ]]; then
         GIT_CONFIG_GLOBAL=/dev/null \
-            git clone "https://${remote_path}.git" "${local_path}"
+            git clone "https://${remote_git_path}.git" "${local_git_path}"
     fi
 
-    if ! grep -q "^${zshrc_cfg}$" "${home_zshrc_path}"; then
-        echo -e "\n${zshrc_cfg}" >>"${home_zshrc_path}"
+    if ! grep -q "^${zshrc_cfg}$" "${local_zshrc_path}"; then
+        echo -e "\n${zshrc_cfg}" >>"${local_zshrc_path}"
     fi
 
-    git config --global include.path "~/src/${remote_path}/.gitconfig"
-    git config --global 'includeIf.gitdir/i:~/src/github.com/.path' "~/src/${remote_path}/.gitconfig"
-}
-
-# Ref: https://asdf-vm.com/guide/getting-started.html
-install_asdf() {
-    local local_path="${HOME}/.asdf"
-
-    if [[ ! -d "${local_path}" ]]; then
-        GIT_CONFIG_GLOBAL=/dev/null \
-            git clone "https://github.com/asdf-vm/asdf.git" "${local_path}" --branch v0.14.0
-    fi
-
-    # asdf update
+    git config --global include.path "~/src/${remote_git_path}/.gitconfig"
+    git config --global 'includeIf.gitdir/i:~/src/github.com/.path' "~/src/${remote_git_path}/.gitconfig"
 }
 
 install_asdf_pkgs() {
@@ -115,22 +134,25 @@ install_asdf_pkgs() {
         "terraform"
         "kubectl"
         "k9s"
+        "colima"
+        "direnv"
     )
 
+    echo "Installing ASDF packages..."
+
     for asdf_pkg in "${asdf_pkgs[@]}"; do
-        asdf plugin add "${asdf_pkg}"
-        asdf install "${asdf_pkg}" latest
-        asdf global "${asdf_pkg}" latest
+        asdf_cmd plugin add "${asdf_pkg}"
+        asdf_cmd install "${asdf_pkg}" latest
+        asdf_cmd set -u "${asdf_pkg}" latest
     done
 }
 
 setup_asdf() {
-    install_asdf
     install_asdf_pkgs
 }
 
 main() {
-    check_is_macos
+    abort_if_not_mac
     setup_brew
     setup_zsh
     setup_asdf
