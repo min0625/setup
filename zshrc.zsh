@@ -3,6 +3,8 @@ export LANG="zh_TW.UTF-8"
 # export LC_ALL="en_US.UTF-8"
 # export LC_ALL="zh_TW.UTF-8"
 
+local curr_dir="$(dirname "$(realpath "${0}")")"
+
 alias -- -='cd -'
 alias ls='ls -F --color=auto'
 alias ls='gls' # GNU ls
@@ -64,6 +66,7 @@ export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
 source "${XDG_CONFIG_HOME:-${HOME}/.config}/asdf-direnv/zshrc"
 
 # Golang
+source "${curr_dir}/set-go-env.zsh"
 export GOPATH="${HOME}/go"
 export GOMODCACHE="${GOPATH}/pkg/mod"
 export GOBIN="${GOPATH}/bin"
