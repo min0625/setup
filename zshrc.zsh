@@ -27,6 +27,8 @@ export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
 # Homebrew path for mac M1
 export PATH="/opt/homebrew/bin:${PATH}"
 
+export PATH="$PATH:${HOME}/.local/bin"
+
 # GNU Bin Utils
 # Install: brew install coreutils
 # Info: brew info coreutils
@@ -52,12 +54,18 @@ precmd() {
 # Format the vcs_info_msg_0_ variable
 zstyle ':vcs_info:git:*' formats '%F{1}(%b)%f'
 
-unsetopt menu_complete # do not autoselect the first completion entry
+setopt menu_complete # auto select the first completion entry.
 setopt prompt_subst
 setopt auto_cd
 setopt auto_menu # show completion menu on successive tab press
 setopt complete_in_word
 setopt always_to_end
+
+# Auto Suggestions
+# Install: brew install zsh-autosuggestions
+source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='underline'
 
 # ASDF
 export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"

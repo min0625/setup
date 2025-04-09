@@ -89,6 +89,7 @@ install_brew_pkgs() {
         "colima"
         "gnupg"
         "trash"
+        "zsh-autosuggestions"
     )
 
     echo "Installing Homebrew packages..."
