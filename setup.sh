@@ -86,10 +86,11 @@ install_brew_pkgs() {
         "asdf"
         "docker"
         "docker-compose"
-        "colima"
+        "colima" # colima [start|status|stop]
         "gnupg"
         "trash"
         "zsh-autosuggestions"
+        # "awscli" # AWS CLI v2
     )
 
     echo "Installing Homebrew packages..."

@@ -15,18 +15,6 @@
 ### Git GUI Fork
 - Install: https://git-fork.com/
 
-### Docker Colima CLI
-- Ref: https://dockerbook.tw/docs/alternatives/colima/
-```sh
-brew install docker
-brew install docker-compose
-brew install colima
-
-colima start
-colima status
-colima stop
-```
-
 ### SSH Key
 ```sh
 ssh-keygen -t ed25519 -b 4096
@@ -35,15 +23,19 @@ cat ~/.ssh/id_ed25519.pub | pbcopy
 
 ### GPG Key
 ```sh
+# Install GPG
 brew install gnupg
+
+# Generate a new GPG key
+# See: https://docs.github.com/zh/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
 gpg --full-generate-key
+
+# List GPG public keys
 gpg --list-keys
+
+# Copy the GPG public key to clipboard
 gpg --armor --export $KEY_ID | pbcopy
 ```
-- See: https://docs.github.com/zh/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
-
-### AWS Cli V2
-- Install: https://docs.aws.amazon.com/zh_tw/cli/latest/userguide/getting-started-install.html
 
 ### Postman
 - Install: https://www.postman.com/downloads/
