@@ -66,6 +66,7 @@ setopt always_to_end
 source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='underline'
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=2000
 
 # ASDF
 export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
