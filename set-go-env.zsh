@@ -7,11 +7,19 @@ asdf_update_golang_env() {
     export GOROOT
     GOROOT="$(dirname "$(dirname "${go_bin_path:A}")")"
 
-    # export GOPATH
-    # GOPATH="$(dirname "${GOROOT:A}")/packages"
+    export GOPATH
+    if [[ -n "${ASDF_GOLANG_GOPATH}" ]]; then
+      GOPATH="${ASDF_GOLANG_GOPATH}"
+    else
+      GOPATH="$(dirname "${GOROOT:A}")/packages"
+    fi
 
-    # export GOBIN
-    # GOBIN="$(dirname "${GOROOT:A}")/bin"
+    export GOBIN
+    if [[ -n "${ASDF_GOLANG_GOBIN}" ]]; then
+      GOBIN="${ASDF_GOLANG_GOBIN}"
+    else
+      GOBIN="$(dirname "${GOROOT:A}")/bin"
+    fi
   fi
 }
 

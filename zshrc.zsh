@@ -18,7 +18,7 @@ alias rm='trash' # brew install trash
 alias python='python3'
 alias pip='pip3'
 alias py='python'
-alias k9s='LANG="en_US.UTF-8" k9s'
+alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
 alias gls='gls -F --color=auto --group-directories-first'
 
 # The `time` command output format like `GNU time`
@@ -66,7 +66,7 @@ setopt always_to_end
 source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='underline'
-export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=2000
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
 # ASDF
 export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
@@ -75,9 +75,12 @@ export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
 source "${XDG_CONFIG_HOME:-${HOME}/.config}/asdf-direnv/zshrc"
 
 # Golang
-source "${curr_dir}/set-go-env.zsh"
 export GOPATH="${HOME}/go"
 export GOMODCACHE="${GOPATH}/pkg/mod"
 export GOBIN="${GOPATH}/bin"
 export PATH="${PATH}:${GOBIN}"
 export GOPRIVATE="github.com/min0625,gitlab.com/min0625"
+# set GOROOT
+export ASDF_GOLANG_GOPATH="${GOPATH}"
+export ASDF_GOLANG_GOBIN="${GOBIN}"
+source "${curr_dir}/set-go-env.zsh"
