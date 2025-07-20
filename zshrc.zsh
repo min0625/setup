@@ -71,8 +71,13 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 # ASDF
 export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
 
+# ASDF completions
+# append completions to fpath
+fpath=("${ASDF_DATA_DIR:-${HOME}/.asdf}/completions" ${fpath})
+
 # ASDF DirEnv
-source "${XDG_CONFIG_HOME:-${HOME}/.config}/asdf-direnv/zshrc"
+# source "${XDG_CONFIG_HOME:-${HOME}/.config}/asdf-direnv/zshrc"
+eval "$(direnv hook zsh)"
 
 # Golang
 export GOPATH="${HOME}/go"
@@ -84,3 +89,8 @@ export GOPRIVATE="github.com/min0625,gitlab.com/min0625"
 export ASDF_GOLANG_GOPATH="${GOPATH}"
 export ASDF_GOLANG_GOBIN="${GOBIN}"
 source "${curr_dir}/set-go-env.zsh"
+
+# AWS
+# Install: brew install awscli
+alias -- aws-sso-login='aws sso login'
+alias -- aws.pgc-core-dev='AWS_PROFILE="pgc-core-dev" aws'
