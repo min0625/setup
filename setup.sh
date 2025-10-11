@@ -85,8 +85,9 @@ install_brew_pkgs() {
         "coreutils"
         "asdf"
         "docker"
-        "docker-compose"
-        "colima" # colima [start|status|stop]
+        # "docker-compose" # Use "docker compose" instead of "docker-compose"
+        # "colima" # colima [start|status|stop]
+        "orbstack" # open -a OrbStack # https://orbstack.dev/download
         "gnupg"
         "trash"
         "zsh-autosuggestions"
