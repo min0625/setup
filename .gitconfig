@@ -3,6 +3,9 @@
 	email = 70873102+min0625@users.noreply.github.com
 	# signingkey = 3AA5C34371567BD2
 
+[init]
+	defaultBranch = main
+
 [core]
 	excludesfile = "~/src/github.com/min0625/setup/.gitignore"
     autocrlf = input
