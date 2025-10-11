@@ -20,6 +20,7 @@ alias pip='pip3'
 alias py='python'
 alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
 alias gls='gls -F --color=auto --group-directories-first'
+alias docker-compose='docker compose'
 
 # The `time` command output format like `GNU time`
 export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
@@ -93,4 +94,12 @@ source "${curr_dir}/set-go-env.zsh"
 # AWS
 # Install: brew install awscli
 alias -- aws-sso-login='aws sso login'
-alias -- aws.pgc-core-dev='AWS_PROFILE="pgc-core-dev" aws'
+alias -- aws.my-core-dev='AWS_PROFILE="my-core-dev" aws'
+
+# GCP
+# Install: brew install --cask gcloud-cli
+alias -- gcloud-auth-login='gcloud auth login'
+
+# Azure
+# Install: brew install azure-cli
+alias -- az-login='az login'
