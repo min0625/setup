@@ -14,13 +14,15 @@ alias mkdir='mkdir -p'
 alias cp='cp -i -r'
 alias mv='mv -i'
 alias rm='rm -i'
-alias rm='trash' # brew install trash
+# alias rm='trash' # brew install trash
 alias python='python3'
 alias pip='pip3'
 alias py='python'
 alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
 alias gls='gls -F --color=auto --group-directories-first'
 alias docker-compose='docker compose'
+
+shell() { "$@"; }
 
 # The `time` command output format like `GNU time`
 export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
@@ -68,6 +70,11 @@ source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='underline'
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+
+# Docker
+# Fix Docker on Apple silicon.
+# export DOCKER_DEFAULT_PLATFORM='linux/amd64'
+# export DOCKER_DEFAULT_PLATFORM=''
 
 # ASDF
 export PATH="${ASDF_DATA_DIR:-${HOME}/.asdf}/shims:${PATH}"
