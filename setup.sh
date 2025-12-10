@@ -85,13 +85,11 @@ install_brew_pkgs() {
         "coreutils"
         "asdf"
         "docker"
-        # "docker-compose" # Use "docker compose" instead of "docker-compose"
-        # "colima" # colima [start|status|stop]
         "orbstack" # open -a OrbStack # https://orbstack.dev/download
+        # "docker-compose" # Use "docker compose" instead of "docker-compose"
         "gnupg"
-        "trash"
+        # "trash"
         "zsh-autosuggestions"
-        # "awscli" # AWS CLI v2
     )
 
     echo "Installing Homebrew packages..."
@@ -134,11 +132,11 @@ setup_zsh() {
 install_asdf_pkgs() {
     local asdf_pkgs=(
         "golang"
+        "direnv"
         "terraform"
         "kubectl"
         "k9s"
-        "colima"
-        "direnv"
+        # "colima" # colima [start|status|stop]
     )
 
     echo "Installing ASDF packages..."
@@ -156,8 +154,8 @@ setup_asdf() {
 
 main() {
     abort_if_not_mac
-    setup_brew
     setup_zsh
+    setup_brew
     setup_asdf
 
     echo "Setup completed!!!"

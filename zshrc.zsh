@@ -98,7 +98,7 @@ export ASDF_GOLANG_GOPATH="${GOPATH}"
 export ASDF_GOLANG_GOBIN="${GOBIN}"
 source "${MIN_ZSHRC_DIR}/set-go-env.zsh"
 
-# AWS
+# AWS V2
 # Install: brew install awscli
 alias -- aws-sso-login='aws sso login'
 alias -- aws.my-core-dev='AWS_PROFILE="my-core-dev" aws'
