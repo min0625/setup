@@ -12,8 +12,11 @@
 	hooksPath = no-hooks
 	# hooksPath = .git/hooks
 
+# [url "ssh://git@github.com/"]
+# 	insteadOf = https://github.com/
+
 [url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
+    pushInsteadOf = https://github.com/
 
 [pull]
 	rebase = true
