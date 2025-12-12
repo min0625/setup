@@ -154,8 +154,8 @@ setup_asdf() {
 
 main() {
     abort_if_not_mac
-    setup_zsh
     setup_brew
+    setup_zsh
     setup_asdf
 
     echo "Setup completed!!!"
