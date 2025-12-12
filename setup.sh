@@ -142,8 +142,8 @@ install_asdf_pkgs() {
     echo "Installing ASDF packages..."
 
     for asdf_pkg in "${asdf_pkgs[@]}"; do
-        asdf_cmd plugin add "${asdf_pkg}"
-        asdf_cmd install "${asdf_pkg}" latest
+        GIT_CONFIG_GLOBAL=/dev/null asdf_cmd plugin add "${asdf_pkg}"
+        GIT_CONFIG_GLOBAL=/dev/null asdf_cmd install "${asdf_pkg}" latest
         asdf_cmd set -u "${asdf_pkg}" latest
     done
 }
