@@ -31,7 +31,7 @@ brew install gnupg
 gpg --full-generate-key
 
 # List GPG public keys
-gpg --list-keys
+gpg --list-keys --keyid-format=long
 
 # Copy the GPG public key to clipboard
 gpg --armor --export $KEY_ID | pbcopy
