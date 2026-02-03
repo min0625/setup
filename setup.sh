@@ -17,16 +17,6 @@ cmd_exist() {
     command -v "${1}" &>/dev/null
 }
 
-abort_if_not_mac() {
-    [[ -n "${TEST_ON_LINUX:-}" ]] && return 0
-
-    local os_name="$(uname -s)"
-
-    if [[ "${os_name}" != 'Darwin' ]]; then
-        abort "Want 'Darwin'(macOS), but got: '${os_name}'"
-    fi
-}
-
 brew_cmd() {
     local cmd_paths=(
         "brew"
@@ -152,7 +142,6 @@ setup_asdf() {
 }
 
 main() {
-    abort_if_not_mac
     setup_brew
     setup_zsh
     setup_asdf
