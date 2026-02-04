@@ -13,89 +13,38 @@ abort() {
     exit 1
 }
 
-cmd_exist() {
-    command -v "${1}" &>/dev/null
-}
-
 brew_cmd() {
-    local cmd_paths=(
-        "brew"
-        "/opt/homebrew/bin/brew" # M1
+    local brew_paths=(
+        "/opt/homebrew/bin/brew"              # Apple Silicon
+        "/home/linuxbrew/.linuxbrew/bin/brew" # Linux
     )
 
-    local local_cmd_path=""
-    for cmd_path in "${cmd_paths[@]}"; do
-        if cmd_exist "${cmd_path}"; then
-            local_cmd_path="${cmd_path}"
+    local brew_exe=""
+
+    for path in "${brew_paths[@]}"; do
+        if [[ -x "${path}" ]]; then
+            brew_exe="${path}"
             break
         fi
     done
 
-    if [[ -z "${local_cmd_path}" ]]; then
-        abort "${FUNCNAME[0]} command not found"
+    if [[ -z "${brew_exe}" ]]; then
+        abort "Homebrew is not installed."
     fi
 
-    "${local_cmd_path}" "$@"
-}
-
-asdf_cmd() {
-    local cmd_paths=(
-        "asdf"
-        "/opt/homebrew/bin/asdf"
-    )
-
-    local local_cmd_path=""
-    for cmd_path in "${cmd_paths[@]}"; do
-        if cmd_exist "${cmd_path}"; then
-            local_cmd_path="${cmd_path}"
-            break
-        fi
-    done
-
-    if [[ -z "${local_cmd_path}" ]]; then
-        abort "${0} command not found"
-    fi
-
-    "${local_cmd_path}" "$@"
-}
-
-install_brew() {
-    if ! cmd_exist "brew"; then
-        echo "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-
-    echo "Updating Homebrew..."
-    brew update
-}
-
-install_brew_pkgs() {
-    local brew_pkgs=(
-        "git"
-        "coreutils"
-        "asdf"
-        "docker"
-        "orbstack" # open -a OrbStack # https://orbstack.dev/download
-        # "docker-compose" # Use "docker compose" instead of "docker-compose"
-        "gnupg"
-        # "trash"
-        "zsh-autosuggestions"
-    )
-
-    echo "Installing Homebrew packages..."
-
-    for brew_pkg in "${brew_pkgs[@]}"; do
-        if brew_cmd list "${brew_pkg}" &>/dev/null; then
-            brew_cmd upgrade "${brew_pkg}"
-        else
-            brew_cmd install "${brew_pkg}"
-        fi
-    done
+    "${brew_exe}" "$@"
 }
 
 setup_brew() {
-    install_brew
-    install_brew_pkgs
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    brew_cmd install git
+    brew_cmd install coreutils
+    brew_cmd install docker
+    brew_cmd install gnupg
+    brew_cmd install zsh-autosuggestions
+
+    # brew_cmd install orbstack
 }
 
 setup_zsh() {
@@ -118,33 +67,19 @@ setup_zsh() {
     git config --global 'includeIf.gitdir/i:~/src/github.com/.path' "~/src/${remote_git_path}/.gitconfig"
 }
 
-install_asdf_pkgs() {
-    local asdf_pkgs=(
-        "golang"
-        "direnv"
-        "terraform"
-        "kubectl"
-        "k9s"
-        # "colima" # colima [start|status|stop]
-    )
+setup_mise() {
+    curl https://mise.run | sh
 
-    echo "Installing ASDF packages..."
-
-    for asdf_pkg in "${asdf_pkgs[@]}"; do
-        asdf_cmd plugin add "${asdf_pkg}"
-        asdf_cmd install "${asdf_pkg}" latest
-        asdf_cmd set -u "${asdf_pkg}" latest
-    done
-}
-
-setup_asdf() {
-    install_asdf_pkgs
+    "${HOME}/.local/bin/mise" use --global go
+    "${HOME}/.local/bin/mise" use --global terraform
+    "${HOME}/.local/bin/mise" use --global kubectl
+    "${HOME}/.local/bin/mise" use --global k9s
 }
 
 main() {
     setup_brew
     setup_zsh
-    setup_asdf
+    setup_mise
 
     echo "Setup completed!!!"
 }

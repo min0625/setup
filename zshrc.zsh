@@ -7,7 +7,7 @@ export LANG="zh_TW.UTF-8"
 # export LC_ALL="en_US.UTF-8"
 
 # Environment
-export MIN_ZSHRC_DIR="$(dirname "$(realpath "${0}")")"
+# export MIN_ZSHRC_DIR="$(dirname "$(realpath "${0}")")"
 
 # Aliases
 alias ls='ls -F --color=auto'
@@ -18,8 +18,8 @@ alias mkdir='mkdir -p'
 alias cp='cp -i -r'
 alias mv='mv -i'
 alias rm='rm -i'
-alias python='python3'
-alias pip='pip3'
+# alias python='python3'
+# alias pip='pip3'
 alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
 alias gls='gls -F --color=auto --group-directories-first'
 alias docker-compose='docker compose'
@@ -32,7 +32,15 @@ export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
 export PATH="${PATH}:${HOME}/.local/bin"
 
 # Homebrew
-export PATH="/opt/homebrew/bin:${PATH}"
+if [[ -d "/opt/homebrew/bin" ]]; then
+    export PATH="/opt/homebrew/bin:${PATH}" # Apple Silicon
+fi
+
+if [[ -d "/home/linuxbrew/.linuxbrew/bin" ]]; then
+    export PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}" # Linux
+fi
+
+# export MIN_BREW_PREFIX="$(brew --prefix)"
 
 # GNU Util
 # Install: brew install coreutils
@@ -61,9 +69,12 @@ setopt auto_menu # show completion menu on successive tab press
 setopt complete_in_word
 setopt always_to_end
 
-# Auto Suggestion
+# Auto Suggestion via Homebrew
 # Install: brew install zsh-autosuggestions
-source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+if [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
 # export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='underline'
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
@@ -73,20 +84,24 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 # export DOCKER_DEFAULT_PLATFORM='linux/amd64'
 # export DOCKER_DEFAULT_PLATFORM=''
 
-# ASDF
-export ASDF_DATA_DIR="${HOME}/.asdf"
+# MISE
+eval "$(mise activate zsh)"
+eval "$(mise activate zsh --shims)"
 
-export PATH="${ASDF_DATA_DIR}/shims:${PATH}"
+# ASDF
+# export ASDF_DATA_DIR="${HOME}/.asdf"
+
+# export PATH="${ASDF_DATA_DIR}/shims:${PATH}"
 
 # ASDF Completion
-fpath=("${ASDF_DATA_DIR}/completions" ${fpath})
+# fpath=("${ASDF_DATA_DIR}/completions" ${fpath})
 
-# ASDF DirEnv
-if [[ -n "$(command -v direnv)" ]]; then
-    eval "$(direnv hook zsh)"
-fi
+# # ASDF DirEnv
+# if [[ -n "$(command -v direnv)" ]]; then
+#     eval "$(direnv hook zsh)"
+# fi
 
-# Golang
+# Go
 export GOPATH="${HOME}/go"
 export GOMODCACHE="${GOPATH}/pkg/mod"
 export GOBIN="${GOPATH}/bin"
@@ -94,9 +109,9 @@ export PATH="${PATH}:${GOBIN}"
 export GOPRIVATE="github.com/min0625,gitlab.com/min0625"
 
 # setup GOROOT
-export ASDF_GOLANG_GOPATH="${GOPATH}"
-export ASDF_GOLANG_GOBIN="${GOBIN}"
-source "${MIN_ZSHRC_DIR}/set-go-env.zsh"
+# export ASDF_GOLANG_GOPATH="${GOPATH}"
+# export ASDF_GOLANG_GOBIN="${GOBIN}"
+# source "${MIN_ZSHRC_DIR}/set-go-env.zsh"
 
 # AWS V2
 # Install: brew install awscli
