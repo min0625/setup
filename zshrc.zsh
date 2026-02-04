@@ -85,6 +85,7 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 # export DOCKER_DEFAULT_PLATFORM=''
 
 # MISE
+export MISE_GO_SET_GOBIN=false
 eval "$(mise activate zsh)"
 eval "$(mise activate zsh --shims)"
 
