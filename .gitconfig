@@ -9,7 +9,7 @@
 [core]
 	excludesfile = "~/src/github.com/min0625/setup/.gitignore"
     autocrlf = input
-	hooksPath = no-hooks
+	# hooksPath = no-hooks
 	# hooksPath = .git/hooks
 
 # [url "ssh://git@github.com/"]

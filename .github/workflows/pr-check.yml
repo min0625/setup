@@ -1,0 +1,25 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: PR Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: --help # This is a workaround to install the dependencies without running the hooks
+
+    - name: Run make check
+      run: make check
