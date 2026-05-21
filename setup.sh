@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Ensure this script is executed by Bash.
+# Use `[` in this initial guard before relying on Bash-specific syntax elsewhere.
+if [ -z "${BASH_VERSION-}" ]; then
+	printf '%s\n' 'error: this script must be run with bash' >&2
+	exit 1
+fi
+
 # Abort on any error.
 set -eo pipefail
 
@@ -9,83 +16,89 @@ set -u
 [[ -n "${TRACE:-}" ]] && set -x
 
 abort() {
-    printf "%s\n" "$@" >&2
-    exit 1
+	printf "%s\n" "$@" >&2
+	exit 1
 }
 
 setup_brew() {
-    echo "Setting up Homebrew..."
+	echo "Setting up Homebrew..."
 
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # Homebrew
-    if [[ -d "/opt/homebrew/bin" ]]; then
-        export PATH="/opt/homebrew/bin:${PATH}" # Apple Silicon
-    fi
+	# Homebrew
+	if [[ -x "/opt/homebrew/bin/brew" ]]; then
+		eval "$(/opt/homebrew/bin/brew shellenv)"
+	elif [[ -x "/usr/local/bin/brew" ]]; then
+		eval "$(/usr/local/bin/brew shellenv)"
+	elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	else
+		abort "brew not found after install"
+	fi
 
-    if [[ -d "/home/linuxbrew/.linuxbrew/bin" ]]; then
-        export PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}" # Linux
-    fi
+	brew update
+	brew upgrade
 
-    brew update
-    brew upgrade
+	brew install git
+	brew install coreutils
+	brew install docker
+	brew install gnupg
+	brew install zsh-autosuggestions
 
-    brew install git
-    brew install coreutils
-    brew install docker
-    brew install gnupg
-    brew install zsh-autosuggestions
-
-    if [[ "$(uname)" == "Darwin" ]]; then
-        brew install orbstack
-    fi
+	if [[ "$(uname)" == "Darwin" ]]; then
+		brew install orbstack
+	fi
 }
 
 setup_zsh() {
-    echo "Setting up zsh..."
+	echo "Setting up zsh..."
 
-    local remote_git_path="github.com/min0625/setup"
-    local local_git_path="${HOME}/src/${remote_git_path}"
-    local zshrc_cfg="source ${local_git_path}/zshrc.zsh"
-    local local_zshrc_path="${HOME}/.zshrc"
+	local dotfiles_repo="github.com/min0625/setup"
+	local dotfiles_dir="${HOME}/src/${dotfiles_repo}"
+	local user_zshrc="${HOME}/.zshrc"
+	local zshrc_include_line="source ${dotfiles_dir}/zshrc.zsh"
+	local dotfiles_gitconfig="${dotfiles_dir}/.gitconfig"
 
-    if [[ ! -d "${local_git_path}" ]]; then
-        git clone "https://${remote_git_path}.git" "${local_git_path}"
-    fi
+	mkdir -p "$(dirname "${dotfiles_dir}")"
+	if [[ ! -d "${dotfiles_dir}" ]]; then
+		git clone "https://${dotfiles_repo}.git" "${dotfiles_dir}"
+	fi
 
-    if ! grep -q "^${zshrc_cfg}$" "${local_zshrc_path}"; then
-        echo -e "\n${zshrc_cfg}" >>"${local_zshrc_path}"
-    fi
+	touch "${user_zshrc}"
+	if ! grep -qFx -- "${zshrc_include_line}" "${user_zshrc}"; then
+		printf '\n%s\n' "${zshrc_include_line}" >> "${user_zshrc}"
+	fi
 
-    git config --global include.path "~/src/${remote_git_path}/.gitconfig"
-    git config --global 'includeIf.gitdir/i:~/src/github.com/.path' "~/src/${remote_git_path}/.gitconfig"
+	git config --global include.path "${dotfiles_gitconfig}"
+	git config --global 'includeIf.gitdir/i:~/src/github.com/.path' "${dotfiles_gitconfig}"
 }
 
 setup_mise() {
-    echo "Setting up MISE..."
+	echo "Setting up MISE..."
 
-    curl https://mise.run | sh
+	curl -fsSL https://mise.run | sh
 
-    export PATH="${PATH}:${HOME}/.local/bin"
+	export PATH="${PATH}:${HOME}/.local/bin"
 
-    mise use --global go
-    mise use --global terraform
-    mise use --global kubectl
-    mise use --global k9s
-    mise use --global uv
-    mise use --global bun
+	mise use --global go
+	mise use --global terraform
+	mise use --global kubectl
+	mise use --global k9s
+	mise use --global uv
+	mise use --global bun
 
-    mise exec -- uv tool install pre-commit
+	mise exec -- uv python install 3.14 --default || true
+	mise exec -- uv tool install pre-commit
 
-    # mise use --global node # Install it manually.
+	# mise use --global node # Install it manually.
 }
 
 main() {
-    setup_brew
-    setup_zsh
-    setup_mise
+	setup_brew
+	setup_zsh
+	setup_mise
 
-    echo "Setup completed!!!"
+	echo "Setup completed!!!"
 }
 
 main "$@"

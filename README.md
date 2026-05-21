@@ -1,6 +1,6 @@
 # My Setup Notes
 
-## Setup For Mac
+## Setup for macOS
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/min0625/setup/HEAD/setup.sh)"
 ```
@@ -18,7 +18,7 @@
 ### SSH Key
 ```sh
 ssh-keygen -t ed25519 -b 4096
-cat ~/.ssh/id_ed25519.pub | pbcopy
+cat ~/.ssh/id_ed25519.pub | pbcopy # macOS only
 ```
 
 ### GPG Key
