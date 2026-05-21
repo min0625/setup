@@ -13,47 +13,41 @@ abort() {
     exit 1
 }
 
-brew_cmd() {
-    local brew_paths=(
-        "/opt/homebrew/bin/brew"              # Apple Silicon
-        "/home/linuxbrew/.linuxbrew/bin/brew" # Linux
-    )
-
-    local brew_exe=""
-
-    for path in "${brew_paths[@]}"; do
-        if [[ -x "${path}" ]]; then
-            brew_exe="${path}"
-            break
-        fi
-    done
-
-    if [[ -z "${brew_exe}" ]]; then
-        abort "Homebrew is not installed."
-    fi
-
-    "${brew_exe}" "$@"
-}
-
 setup_brew() {
+    echo "Setting up Homebrew..."
+
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    brew_cmd install git
-    brew_cmd install coreutils
-    brew_cmd install docker
-    brew_cmd install gnupg
-    brew_cmd install zsh-autosuggestions
+    # Homebrew
+    if [[ -d "/opt/homebrew/bin" ]]; then
+        export PATH="/opt/homebrew/bin:${PATH}" # Apple Silicon
+    fi
 
-    # brew_cmd install orbstack
+    if [[ -d "/home/linuxbrew/.linuxbrew/bin" ]]; then
+        export PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}" # Linux
+    fi
+
+    brew update
+    brew upgrade
+
+    brew install git
+    brew install coreutils
+    brew install docker
+    brew install gnupg
+    brew install zsh-autosuggestions
+
+    if [[ "$(uname)" == "Darwin" ]]; then
+        brew install orbstack
+    fi
 }
 
 setup_zsh() {
+    echo "Setting up zsh..."
+
     local remote_git_path="github.com/min0625/setup"
     local local_git_path="${HOME}/src/${remote_git_path}"
     local zshrc_cfg="source ${local_git_path}/zshrc.zsh"
     local local_zshrc_path="${HOME}/.zshrc"
-
-    echo "Setting up zsh..."
 
     if [[ ! -d "${local_git_path}" ]]; then
         git clone "https://${remote_git_path}.git" "${local_git_path}"
@@ -68,12 +62,22 @@ setup_zsh() {
 }
 
 setup_mise() {
+    echo "Setting up MISE..."
+
     curl https://mise.run | sh
 
-    "${HOME}/.local/bin/mise" use --global go
-    "${HOME}/.local/bin/mise" use --global terraform
-    "${HOME}/.local/bin/mise" use --global kubectl
-    "${HOME}/.local/bin/mise" use --global k9s
+    export PATH="${PATH}:${HOME}/.local/bin"
+
+    mise use --global go
+    mise use --global terraform
+    mise use --global kubectl
+    mise use --global k9s
+    mise use --global uv
+    mise use --global bun
+
+    mise exec -- uv tool install pre-commit
+
+    # mise use --global node # Install it manually.
 }
 
 main() {
