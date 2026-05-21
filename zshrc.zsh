@@ -18,8 +18,6 @@ alias mkdir='mkdir -p'
 alias cp='cp -i -r'
 alias mv='mv -i'
 alias rm='rm -i'
-# alias python='python3'
-# alias pip='pip3'
 alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
 alias gls='gls -F --color=auto --group-directories-first'
 alias docker-compose='docker compose'
@@ -32,12 +30,18 @@ export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
 export PATH="${PATH}:${HOME}/.local/bin"
 
 # Homebrew
-if [[ -d "/opt/homebrew/bin" ]]; then
-    export PATH="/opt/homebrew/bin:${PATH}" # Apple Silicon
-fi
-
-if [[ -d "/home/linuxbrew/.linuxbrew/bin" ]]; then
-    export PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}" # Linux
+if [[ -x "/opt/homebrew/bin/brew" ]]; then
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x "/usr/local/bin/brew" ]]; then
+	eval "$(/usr/local/bin/brew shellenv)"
+elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif command -v brew > /dev/null 2>&1; then
+	eval "$(brew shellenv)"
+else
+	if [[ -o interactive ]]; then
+		print -u2 "warning: Homebrew not found; skipping shellenv initialization."
+	fi
 fi
 
 # export MIN_BREW_PREFIX="$(brew --prefix)"
@@ -71,8 +75,11 @@ setopt always_to_end
 
 # Auto Suggestion via Homebrew
 # Install: brew install zsh-autosuggestions
-if [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
-    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+if command -v brew > /dev/null 2>&1; then
+	autosuggest_script="$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+	if [[ -f "${autosuggest_script}" ]]; then
+		source "${autosuggest_script}"
+	fi
 fi
 
 # export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
@@ -86,8 +93,10 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
 # MISE
 export MISE_GO_SET_GOBIN=false
-eval "$(mise activate zsh)"
-eval "$(mise activate zsh --shims)"
+if command -v mise > /dev/null 2>&1; then
+	eval "$(mise activate zsh)"
+	eval "$(mise activate zsh --shims)"
+fi
 
 # ASDF
 # export ASDF_DATA_DIR="${HOME}/.asdf"
