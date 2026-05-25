@@ -1,4 +1,5 @@
 # Zsh configuration file
+# shellcheck disable=SC2148  # This is a zsh config file; shellcheck cannot infer zsh for sourced zshrc files.
 
 # Locale
 export LANG="zh_TW.UTF-8"
@@ -10,8 +11,9 @@ export LANG="zh_TW.UTF-8"
 # export MIN_ZSHRC_DIR="$(dirname "$(realpath "${0}")")"
 
 # Aliases
-alias ls='ls -F --color=auto'
+alias gls='gls -F --color=auto --group-directories-first'
 alias ls='gls' # GNU ls
+# alias ls='ls -F --color=auto'
 alias ll='ls -l'
 alias grep='grep --color'
 alias mkdir='mkdir -p'
@@ -19,7 +21,6 @@ alias cp='cp -i -r'
 alias mv='mv -i'
 alias rm='rm -i'
 alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
-alias gls='gls -F --color=auto --group-directories-first'
 alias docker-compose='docker compose'
 alias shell='command'
 
@@ -31,17 +32,17 @@ export PATH="${PATH}:${HOME}/.local/bin"
 
 # Homebrew
 if [[ -x "/opt/homebrew/bin/brew" ]]; then
-	eval "$(/opt/homebrew/bin/brew shellenv)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x "/usr/local/bin/brew" ]]; then
-	eval "$(/usr/local/bin/brew shellenv)"
+    eval "$(/usr/local/bin/brew shellenv)"
 elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 elif command -v brew > /dev/null 2>&1; then
-	eval "$(brew shellenv)"
+    eval "$(brew shellenv)"
 else
-	if [[ -o interactive ]]; then
-		print -u2 "warning: Homebrew not found; skipping shellenv initialization."
-	fi
+    if [[ -o interactive ]]; then
+        print -u2 "warning: Homebrew not found; skipping shellenv initialization."
+    fi
 fi
 
 # export MIN_BREW_PREFIX="$(brew --prefix)"
@@ -52,11 +53,18 @@ fi
 # export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
 
 # Prompt
-export PROMPT='%F{184}%n%f %F{30}%~%f${vcs_info_msg_0_} %# '
+# shellcheck disable=SC2154,SC2016,SC2034  # Reason: PROMPT is evaluated by zsh prompt subsystem and not used directly in shell script flow.
+PROMPT='%F{green}%n%f %F{blue}%~%f %F{magenta}$(git_prompt_info)%f %# '
 
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:git:*' formats '%F{1}(%b)%f'
+zstyle ':vcs_info:git:*' formats '%F{magenta}(%b)%f'
+zstyle ':vcs_info:git:*' actionformats '%F{magenta}(%b|%a)%f'
+zstyle ':vcs_info:git:*' enable git
+
+git_prompt_info() {
+    [[ -n "${vcs_info_msg_0_}" ]] && print -n "${vcs_info_msg_0_}"
+}
 
 precmd() { vcs_info; }
 
@@ -76,10 +84,11 @@ setopt always_to_end
 # Auto Suggestion via Homebrew
 # Install: brew install zsh-autosuggestions
 if command -v brew > /dev/null 2>&1; then
-	autosuggest_script="$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-	if [[ -f "${autosuggest_script}" ]]; then
-		source "${autosuggest_script}"
-	fi
+    autosuggest_script="$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    if [[ -f "${autosuggest_script}" ]]; then
+        # shellcheck disable=SC1090  # Reason: script is an optional Homebrew-installed plugin file loaded at runtime.
+        source "${autosuggest_script}"
+    fi
 fi
 
 # export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
@@ -94,22 +103,9 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 # MISE
 export MISE_GO_SET_GOBIN=false
 if command -v mise > /dev/null 2>&1; then
-	eval "$(mise activate zsh)"
-	eval "$(mise activate zsh --shims)"
+    eval "$(mise activate zsh)"
+    eval "$(mise activate zsh --shims)"
 fi
-
-# ASDF
-# export ASDF_DATA_DIR="${HOME}/.asdf"
-
-# export PATH="${ASDF_DATA_DIR}/shims:${PATH}"
-
-# ASDF Completion
-# fpath=("${ASDF_DATA_DIR}/completions" ${fpath})
-
-# # ASDF DirEnv
-# if [[ -n "$(command -v direnv)" ]]; then
-#     eval "$(direnv hook zsh)"
-# fi
 
 # Go
 export GOPATH="${HOME}/go"
@@ -118,10 +114,13 @@ export GOBIN="${GOPATH}/bin"
 export PATH="${PATH}:${GOBIN}"
 export GOPRIVATE="github.com/min0625,gitlab.com/min0625"
 
-# setup GOROOT
-# export ASDF_GOLANG_GOPATH="${GOPATH}"
-# export ASDF_GOLANG_GOBIN="${GOBIN}"
-# source "${MIN_ZSHRC_DIR}/set-go-env.zsh"
+if command -v uv > /dev/null 2>&1; then
+    eval "$(uv generate-shell-completion zsh)"
+fi
+
+if command -v uvx > /dev/null 2>&1; then
+    eval "$(uvx --generate-shell-completion zsh)"
+fi
 
 # AWS V2
 # Install: brew install awscli

@@ -4,7 +4,9 @@
     // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     // Features to add to the dev container. More info: https://containers.dev/features.
-    "features": {},
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
     "postCreateCommand": "bash .devcontainer/post_create.sh",
     "customizations": {
         "vscode": {

@@ -1,9 +1,19 @@
+# MacOS and Windows system files
 .DS_Store
-# .idea/
+Thumbs.db
+
+# VS Code
 # .vscode/
+# !.vscode/extensions.json
 
-.envrc
+# JetBrains IDEs
+.idea/
+
+# Environment files
 .env
+.envrc
 
-*.local
+# Local configuration files
 *.local.*
+*.local/
+*.local
