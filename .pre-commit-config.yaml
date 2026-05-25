@@ -15,12 +15,17 @@ repos:
     hooks:
       - id: gitleaks
 
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.11.0
+    hooks:
+      - id: shellcheck
+
   - repo: local
     hooks:
       - id: shfmt
         name: shfmt
-        entry: shfmt -ci -sr -w
+        entry: shfmt -i 4 -kp -ci -sr -w
         language: golang
         additional_dependencies:
           - mvdan.cc/sh/v3/cmd/shfmt@v3.13.1
-        files: \.(sh|zsh)$
+        types: [shell]
