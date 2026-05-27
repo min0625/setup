@@ -85,6 +85,8 @@ setup_mise() {
 
     export PATH="${PATH}:${HOME}/.local/bin"
 
+    mise self-update
+
     mise use --global go
     mise use --global terraform
     mise use --global kubectl
