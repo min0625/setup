@@ -22,7 +22,7 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias k9s='LANG="en_US.UTF-8" k9s' # k9s must be in `en_US.UTF-8` locale.
 alias docker-compose='docker compose'
-alias shell='command'
+alias shell='command' # bypass aliases/functions to call the real binary directly (e.g. `shell git`)
 
 # Time Format
 export TIMEFMT=$'\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
@@ -74,12 +74,21 @@ autoload -Uz compinit && compinit -i
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' list-colors ''
 
-setopt menu_complete # auto select the first completion entry.
+# setopt menu_complete # auto select the first completion entry.
 setopt prompt_subst
 setopt auto_cd
 setopt auto_menu # show completion menu on successive tab press
 setopt complete_in_word
 setopt always_to_end
+
+# History
+export HISTFILE="${HOME}/.zsh_history"
+export HISTSIZE=100000
+export SAVEHIST=100000
+setopt hist_ignore_dups     # do not record duplicated consecutive entries
+setopt hist_ignore_all_dups # remove older duplicate entries from history
+setopt hist_save_no_dups    # do not save duplicates when writing history file
+setopt share_history        # share history across all zsh sessions
 
 # Auto Suggestion via Homebrew
 # Install: brew install zsh-autosuggestions
@@ -101,6 +110,7 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 # export DOCKER_DEFAULT_PLATFORM=''
 
 # MISE
+# Prevent mise from overriding GOBIN so the manual GOBIN below takes effect.
 export MISE_GO_SET_GOBIN=false
 if command -v mise > /dev/null 2>&1; then
     eval "$(mise activate zsh)"
