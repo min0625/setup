@@ -40,8 +40,10 @@ setup_brew() {
     brew upgrade
 
     brew install git
+    brew install curl
     brew install coreutils
     brew install docker
+    brew install openssh
     brew install gnupg
     brew install zsh-autosuggestions
 
@@ -62,6 +64,8 @@ setup_zsh() {
     mkdir -p "$(dirname "${dotfiles_dir}")"
     if [[ ! -d "${dotfiles_dir}" ]]; then
         git clone "https://${dotfiles_repo}.git" "${dotfiles_dir}"
+    else
+        git -C "${dotfiles_dir}" pull --ff-only
     fi
 
     touch "${user_zshrc}"

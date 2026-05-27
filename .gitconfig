@@ -1,14 +1,27 @@
 [user]
 	name = Min Huang
 	email = 70873102+min0625@users.noreply.github.com
+
+	# Use GPG key ID.
 	# signingkey = 3AA5C34371567BD2
+
+	# Use SSH public key path.
+	# signingkey = ~/.ssh/id_ed25519.pub
+
+	# Use SSH public key directly (no file needed, works in dev containers).
+	#
+	# > git config --global gpg.format "ssh"
+	# > pubkey="$(ssh-add -L | head -1)"
+	# > git config --global user.signingkey "key::${pubkey}"
+	#
+	# signingkey = key::ssh-ed25519 AAAA......
 
 [init]
 	defaultBranch = main
 
 [core]
 	excludesfile = "~/src/github.com/min0625/setup/.gitignore"
-    autocrlf = input
+	autocrlf = input
 	# hooksPath = no-hooks
 	# hooksPath = .git/hooks
 
@@ -16,10 +29,13 @@
 # 	insteadOf = https://github.com/
 
 [url "ssh://git@github.com/"]
-    pushInsteadOf = https://github.com/
+	pushInsteadOf = https://github.com/
 
 [pull]
 	rebase = true
 
 [commit]
 	# gpgsign = true
+
+# [gpg]
+# 	format = ssh
